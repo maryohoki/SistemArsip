@@ -2474,8 +2474,7 @@ a {
   /* Sembunyikan semua elemen UI aplikasi */
   .sidebar,
   .sidebar-overlay,
-  .top-header,
-  .main-wrapper > .content-area > section:not(#view-cetak),
+  .main-wrapper,
   .modal-overlay:not(#modal-preview-letter),
   .modal-header,
   .modal-footer,
