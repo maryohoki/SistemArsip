@@ -147,6 +147,30 @@ router.post('/', async (req, res) => {
       });
     }
 
+    // Validasi NIK — harus 16 digit angka
+    if (!/^\d{16}$/.test(body.nik)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Format NIK tidak valid. NIK harus terdiri dari 16 digit angka.'
+      });
+    }
+
+    // Validasi panjang nama
+    if (body.nama.trim().length < 3) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nama pemohon tidak valid (minimal 3 karakter).'
+      });
+    }
+
+    // Validasi format tanggal tglTerbit
+    if (body.tglTerbit && !/^\d{4}-\d{2}-\d{2}$/.test(body.tglTerbit)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Format tanggal tidak valid. Gunakan format YYYY-MM-DD.'
+      });
+    }
+
     // Check duplicate
     const [dup] = await pool.query('SELECT id FROM tb_arsip_surat WHERE no_surat = ?', [body.noSurat]);
     if (dup.length > 0) {

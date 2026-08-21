@@ -277,10 +277,13 @@ document.addEventListener('DOMContentLoaded', async () => {
      MODULE 2: FORM BUILDER & CETAK SURAT
      ───────────────────────────────────────────────────────────────────────── */
   async function initFormBuilder(typeKey) {
-    // Define main types vs other types
-    const mainTypes = ['SKU', 'SKTM', 'SKTM_UMUM', 'SKTM_PELAJAR'];
-    
-    const allKeys = Object.keys(templates);
+  // Pastikan templates selalu terdefinisi — cegah ReferenceError
+  const templates = _cachedTemplates || window.LETTER_TYPES || {};
+
+  // Define main types vs other types
+  const mainTypes = ['SKU', 'SKTM', 'SKTM_UMUM', 'SKTM_PELAJAR'];
+
+  const allKeys = Object.keys(templates);
     const mainKeys = allKeys.filter(k => mainTypes.includes(k));
     const otherKeys = allKeys.filter(k => !mainTypes.includes(k));
     
@@ -441,10 +444,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Attach Submit
     const formElement = document.getElementById('form-cetak-surat');
     if (formElement) {
-      formElement.onsubmit = async (e) => {
+      // Hapus listener lama sebelum menambahkan yang baru
+      const freshForm = formElement.cloneNode(true);
+      formElement.parentNode.replaceChild(freshForm, formElement);
+      
+      const cleanForm = document.getElementById('form-cetak-surat');
+      cleanForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         await processFormSubmission(autoTrxId, typeKey);
-      };
+      });
     }
   }
 
@@ -541,6 +549,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
+    document.getElementById('archive-table-body').addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (btn.dataset.action === 'view') await viewLetterById(id);
+      if (btn.dataset.action === 'delete') await deleteLetterById(id);
+    });
+
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -600,10 +616,10 @@ document.addEventListener('DOMContentLoaded', async () => {
               <td>${formatDateIndonesian(r.tglTerbit)}</td>
               <td>
                 <div class="action-buttons">
-                  <button class="action-btn" title="Lihat / Cetak Surat" onclick="viewLetterById('${r.id}')">
+                  <button class="action-btn" title="Lihat / Cetak Surat" data-action="view" data-id="${escapeHTML(r.id)}">
                     <i class="fa-solid fa-eye"></i>
                   </button>
-                  <button class="action-btn delete" title="Hapus Arsip" onclick="deleteLetterById('${r.id}')">
+                  <button class="action-btn delete" title="Hapus Arsip" data-action="delete" data-id="${escapeHTML(r.id)}">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>
@@ -700,8 +716,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (modalOverlay) modalOverlay.classList.add('active');
 
     const btnPrint = document.getElementById('btn-modal-print');
-    if (btnPrint) btnPrint.onclick = () => window.print();
+  if (btnPrint) {
+    // Clone untuk hapus event listener lama
+    const freshBtn = btnPrint.cloneNode(true);
+    btnPrint.parentNode.replaceChild(freshBtn, btnPrint);
+    freshBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.print();
+    });
   }
+}
 
   window.closePreviewModal = function () {
     document.getElementById('modal-preview-letter')?.classList.remove('active');
@@ -749,6 +774,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchModalInput = document.getElementById('quick-search-input');
     if (!searchModalInput) return;
 
+    document.getElementById('quick-search-results').addEventListener('click', async (e) => {
+      const item = e.target.closest('[data-search-id]');
+      if (!item) return;
+      closeQuickSearchModal();
+      await viewLetterById(item.dataset.searchId);
+    });
+
     let searchTimeout = null;
     searchModalInput.addEventListener('input', (e) => {
       clearTimeout(searchTimeout);
@@ -769,7 +801,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         resultsContainer.innerHTML = '<div style="padding:20px; text-align:center; color:#94A3B8;">Data tidak ditemukan.</div>';
       } else {
         resultsContainer.innerHTML = matches.map(r => `
-          <div style="padding: 12px 16px; border-bottom: 1px solid #E2E8F0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="closeQuickSearchModal(); viewLetterById('${r.id}');">
+          <div style="padding: 12px 16px; border-bottom: 1px solid #E2E8F0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" data-search-id="${escapeHTML(r.id)}">
             <div>
               <strong style="color: #14532D; font-size: 13px;">${escapeHTML(r.noSurat)}</strong>
               <div style="font-size: 13px; font-weight: 600;">${escapeHTML(r.nama)} <span style="font-size:11px; font-weight:400; color:#64748B;">(NIK: ${r.nik})</span></div>
@@ -997,6 +1029,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.handleImportDatabase = async function (event) {
     const file = event.target.files[0];
     if (!file) return;
+    
+    if (!confirm(`Import file "${file.name}" akan menambahkan data ke sistem. Data yang sudah ada tidak akan terhapus. Lanjutkan?`)) {
+      event.target.value = '';
+      return;
+    }
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
@@ -1160,8 +1197,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     formAgenda.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      const jenisAgenda = document.getElementById('input-agenda-jenis').value;
+      if (!jenisAgenda) {
+        showToast('Silakan pilih jenis surat agenda terlebih dahulu.', 'error');
+        return;
+      }
+      
       const payload = {
-        jenis_agenda: document.getElementById('input-agenda-jenis').value,
+        jenis_agenda: jenisAgenda,
         no_surat: document.getElementById('input-agenda-nosurat').value,
         tanggal_surat: document.getElementById('input-agenda-tgl').value,
         status: document.getElementById('input-agenda-status').value,

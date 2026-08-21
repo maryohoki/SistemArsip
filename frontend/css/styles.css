@@ -2466,3 +2466,48 @@ a {
   color: #0F172A;
 }
 
+
+/* ========================================================================
+   PRINT STYLES — cetak hanya konten surat di dalam modal preview
+   ======================================================================== */
+@media print {
+  /* Sembunyikan semua elemen UI aplikasi */
+  .sidebar,
+  .sidebar-overlay,
+  .top-header,
+  .main-wrapper > .content-area > section:not(#view-cetak),
+  .modal-overlay:not(#modal-preview-letter),
+  .modal-header,
+  .modal-footer,
+  #backend-status-banner,
+  .toast-container {
+    display: none !important;
+  }
+
+  /* Tampilkan hanya modal preview sebagai konten penuh */
+  body, html {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #modal-preview-letter {
+    position: static !important;
+    background: transparent !important;
+    display: block !important;
+  }
+
+  .modal-dialog {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  #preview-modal-body {
+    padding: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}

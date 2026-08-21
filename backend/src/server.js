@@ -27,7 +27,11 @@ const PORT = process.env.PORT || 3001;
 // ── Middleware ────────────────────────────────────────────────────────────────
 // CORS: izinkan frontend (port 8080) mengakses BE (port 3001)
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://127.0.0.1:8080'],
+  origin: [
+    'http://localhost:8080', 'http://127.0.0.1:8080',
+    'http://localhost', 'http://localhost:80',
+    'http://127.0.0.1', 'http://127.0.0.1:80'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
