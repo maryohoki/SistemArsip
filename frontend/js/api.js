@@ -11,18 +11,34 @@ const API_BASE = 'http://localhost:3001/api';
 // ─── Helper ───────────────────────────────────────────────────────────────────
 async function apiFetch(path, options = {}) {
   const url = `${API_BASE}${path}`;
+  
+  const headers = { 'Content-Type': 'application/json' };
+  // Inject JWT Token
+  if (window.Auth && window.Auth.getToken()) {
+    headers['Authorization'] = `Bearer ${window.Auth.getToken()}`;
+  }
+  
   const defaultOptions = {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...headers, ...(options.headers || {}) },
     ...options
   };
 
-  const res = await fetch(url, defaultOptions);
-  const data = await res.json();
+  try {
+    const res = await fetch(url, defaultOptions);
+    const data = await res.json();
 
-  if (!res.ok || !data.success) {
-    throw new Error(data.message || `HTTP ${res.status} pada ${path}`);
+    if (res.status === 401 || res.status === 403) {
+      if (window.Auth) window.Auth.logout();
+      throw new Error(data.message || 'Sesi habis, silakan login kembali.');
+    }
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || `HTTP ${res.status} pada ${path}`);
+    }
+    return data;
+  } catch (err) {
+    throw err;
   }
-  return data;
 }
 
 // ─── Arsip Surat API ──────────────────────────────────────────────────────────
@@ -144,9 +160,26 @@ async function checkBackendHealth() {
   }
 }
 
+// ─── Auth API ─────────────────────────────────────────────────────────────────
+const authAPI = {
+  login(username, password) {
+    return apiFetch('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
+    });
+  },
+  register(data) {
+    return apiFetch('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+};
+
 // Export ke global scope (karena FE masih pakai plain HTML/JS, bukan ES modules)
 window.arsipAPI      = arsipAPI;
 window.settingsAPI   = settingsAPI;
 window.aktivitasAPI  = aktivitasAPI;
 window.jenisAPI      = jenisAPI;
+window.authAPI       = authAPI;
 window.checkBackendHealth = checkBackendHealth;

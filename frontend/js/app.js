@@ -26,6 +26,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
+  if (window.Auth) {
+    const user = window.Auth.getUser();
+    if (user) {
+      const headerName = document.getElementById('header-user-name');
+      const headerRole = document.getElementById('header-user-role');
+      const welcomeTitle = document.getElementById('welcome-user-title');
+      if (headerName) headerName.textContent = user.nama_lengkap;
+      if (headerRole) headerRole.textContent = user.role === 'admin' ? 'Administrator' : 'Petugas';
+      if (welcomeTitle) welcomeTitle.textContent = `Selamat Datang, ${user.nama_lengkap.split(' ')[0]}`;
+    }
+  }
+
   initSidebarToggle();
   initNavigation();
   await loadAndCacheTemplates();
@@ -547,7 +559,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       keperluan: document.getElementById('input-keperluan').value,
       spesifik: {},
       tglTerbit: new Date().toISOString().split('T')[0],
-      petugas: 'Admin Desa'
+      petugas: window.Auth && window.Auth.getUser() ? window.Auth.getUser().nama_lengkap : 'Admin Desa'
     };
 
     const specFields = (templates[typeKey] || {}).fields || [];

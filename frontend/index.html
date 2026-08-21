@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistem Pengarsipan Administrasi Desa Tanjungsari</title>
 
+  <!-- Auth Script (Check login on page load) -->
+  <script src="js/auth.js"></script>
+
   <!-- Google Fonts: Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,13 +119,17 @@
           </button>
 
           <!-- User Profile -->
-          <div class="user-profile">
+          <div class="user-profile" style="position: relative;">
             <div class="user-info">
-              <div class="user-name">Admin Desa</div>
-              <div class="user-role">Petugas Pelayanan</div>
+              <div class="user-name" id="header-user-name">Memuat...</div>
+              <div class="user-role" id="header-user-role">Petugas</div>
             </div>
-            <div class="user-avatar">
+            <div class="user-avatar" style="cursor: pointer;" onclick="document.getElementById('user-dropdown').style.display = document.getElementById('user-dropdown').style.display === 'none' ? 'block' : 'none'">
               <i class="fa-solid fa-user"></i>
+            </div>
+            <!-- Dropdown Menu -->
+            <div id="user-dropdown" style="display: none; position: absolute; right: 0; top: 100%; background: white; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 100; min-width: 150px; margin-top: 10px;">
+              <a href="#" onclick="window.Auth.logout()" style="display: block; padding: 0.5rem; color: #DC2626; text-decoration: none; font-size: 0.9rem; font-weight: 500;"><i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 5px;"></i> Logout</a>
             </div>
           </div>
         </div>
@@ -141,7 +148,7 @@
           <div class="dashboard-header">
             <div>
               <span class="tag-badge">TANJUNGSARI DIGITAL</span>
-              <h1 class="welcome-title">Selamat Datang, Admin Desa</h1>
+              <h1 class="welcome-title" id="welcome-user-title">Selamat Datang, -</h1>
               <p class="welcome-subtitle">
                 Ringkasan aktivitas dan status penerbitan surat hari ini. Mari lanjutkan pelayanan terbaik untuk
                 masyarakat Desa Tanjungsari.

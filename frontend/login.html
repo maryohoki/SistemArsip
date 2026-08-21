@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sistem Pengarsipan Desa Tanjungsari</title>
+  
+  <script src="js/auth.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #166534; /* Hijau tua khas pertanian */
+      --primary-hover: #14532D;
+      --accent: #F59E0B; /* Warna gabah/padi */
+      --text-main: #1F2937;
+      --bg-color: #F0FDF4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(22, 101, 52, 0.8), rgba(20, 83, 45, 0.9)), url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=2069&auto=format&fit=crop') center/cover no-repeat;
+      position: relative;
+    }
+
+    /* Overlay ornamen daun/sawah */
+    .bg-ornament {
+      position: absolute;
+      bottom: 0; left: 0; width: 100%;
+      height: 250px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,160L48,165.3C96,171,192,181,288,165.3C384,149,480,107,576,96C672,85,768,107,864,122.7C960,139,1056,149,1152,144C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom/cover no-repeat;
+      pointer-events: none;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 10;
+      border-top: 5px solid var(--accent);
+    }
+
+    .header-section { text-align: center; margin-bottom: 2rem; }
+    .header-section i { font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+    .header-section h1 { font-size: 1.5rem; color: var(--text-main); font-weight: 700; }
+    .header-section p { font-size: 0.9rem; color: #6B7280; margin-top: 0.5rem; }
+
+    .form-group { margin-bottom: 1.2rem; position: relative; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.4rem; }
+    
+    .input-wrapper { position: relative; }
+    .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
+    .input-wrapper input {
+      width: 100%; padding: 12px 15px 12px 45px;
+      border: 1px solid #D1D5DB; border-radius: 8px;
+      font-size: 0.95rem; outline: none; transition: all 0.3s ease;
+    }
+    .input-wrapper input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.1); }
+    
+    .toggle-pw { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; cursor: pointer; }
+    .toggle-pw:hover { color: var(--primary); }
+
+    .btn-login {
+      width: 100%; padding: 12px; background: var(--primary); color: white;
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background 0.3s ease; margin-top: 1rem;
+    }
+    .btn-login:hover { background: var(--primary-hover); }
+    .btn-login:disabled { background: #9CA3AF; cursor: not-allowed; }
+
+    .toast {
+      position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 8px;
+      background: white; color: var(--text-main); font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex; align-items: center; gap: 10px; transform: translateX(120%); transition: transform 0.3s ease; z-index: 1000;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.error { border-left: 4px solid #EF4444; }
+    .toast.error i { color: #EF4444; }
+
+    .footer-text { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: #6B7280; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-ornament"></div>
+
+  <div class="login-container">
+    <div class="header-section">
+      <i class="fa-solid fa-wheat-awn"></i>
+      <h1>E-Arsip Desa</h1>
+      <p>Sistem Pengarsipan Administrasi<br>Desa Tanjungsari</p>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="username" placeholder="Masukkan username" required autocomplete="username">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
+          <i class="fa-solid fa-eye toggle-pw" id="toggle-pw" onclick="togglePassword()"></i>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" id="btn-login">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk
+      </button>
+    </form>
+
+    <div class="footer-text">
+      Belum punya akun? Hubungi Administrator Desa.
+    </div>
+  </div>
+
+  <div id="toast" class="toast error">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span id="toast-msg">Error message</span>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    function togglePassword() {
+      const pwInput = document.getElementById('password');
+      const icon = document.getElementById('toggle-pw');
+      if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pwInput.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const btn = document.getElementById('btn-login');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+
+      try {
+        const res = await window.authAPI.login(user, pass);
+        if (res.success) {
+          window.Auth.setAuth(res.token, res.user);
+          window.location.href = 'index.html';
+        }
+      } catch (err) {
+        showToast(err.message || 'Login gagal. Periksa kembali username/password.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk';
+      }
+    });
+  </script>
+</body>
+</html>

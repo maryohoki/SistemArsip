@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Sistem Pengarsipan Desa Tanjungsari</title>
+  
+  <script src="js/auth.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #166534;
+      --primary-hover: #14532D;
+      --accent: #F59E0B;
+      --text-main: #1F2937;
+      --bg-color: #F0FDF4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(22, 101, 52, 0.8), rgba(20, 83, 45, 0.9)), url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=2069&auto=format&fit=crop') center/cover no-repeat;
+      position: relative;
+    }
+
+    .bg-ornament {
+      position: absolute;
+      bottom: 0; left: 0; width: 100%;
+      height: 250px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,160L48,165.3C96,171,192,181,288,165.3C384,149,480,107,576,96C672,85,768,107,864,122.7C960,139,1056,149,1152,144C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom/cover no-repeat;
+      pointer-events: none;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      z-index: 10;
+      border-top: 5px solid var(--accent);
+      margin: 2rem 0;
+    }
+
+    .header-section { text-align: center; margin-bottom: 2rem; }
+    .header-section i { font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .header-section h1 { font-size: 1.4rem; color: var(--text-main); font-weight: 700; }
+    .header-section p { font-size: 0.85rem; color: #6B7280; margin-top: 0.5rem; }
+
+    .form-group { margin-bottom: 1.2rem; position: relative; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.4rem; }
+    
+    .input-wrapper { position: relative; }
+    .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
+    .input-wrapper input, .input-wrapper select {
+      width: 100%; padding: 12px 15px 12px 45px;
+      border: 1px solid #D1D5DB; border-radius: 8px;
+      font-size: 0.95rem; outline: none; transition: all 0.3s ease;
+      background: white;
+    }
+    .input-wrapper input:focus, .input-wrapper select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.1); }
+
+    .btn-login {
+      width: 100%; padding: 12px; background: var(--primary); color: white;
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background 0.3s ease; margin-top: 1rem;
+    }
+    .btn-login:hover { background: var(--primary-hover); }
+    .btn-login:disabled { background: #9CA3AF; cursor: not-allowed; }
+
+    .toast {
+      position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 8px;
+      background: white; color: var(--text-main); font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex; align-items: center; gap: 10px; transform: translateX(120%); transition: transform 0.3s ease; z-index: 1000;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.error { border-left: 4px solid #EF4444; }
+    .toast.error i { color: #EF4444; }
+    .toast.success { border-left: 4px solid #10B981; }
+    .toast.success i { color: #10B981; }
+
+    .footer-text { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: #6B7280; }
+    .footer-text a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-ornament"></div>
+
+  <div class="login-container">
+    <div class="header-section">
+      <i class="fa-solid fa-user-plus"></i>
+      <h1>Pendaftaran Petugas</h1>
+      <p>Buat akun petugas baru untuk sistem arsip desa.</p>
+    </div>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-address-card"></i>
+          <input type="text" id="nama" placeholder="Sesuai KTP" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="username" placeholder="Minimal 5 karakter" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="Minimal 8 karakter" required minlength="8">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Role / Akses</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-shield-halved"></i>
+          <select id="role" required>
+            <option value="petugas">Petugas Administrasi</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" id="btn-register">
+        <i class="fa-solid fa-floppy-disk"></i> Daftarkan Akun
+      </button>
+    </form>
+
+    <div class="footer-text">
+      Kembali ke halaman <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span id="toast-msg">Message</span>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    // Cek otorisasi: hanya admin yang boleh membuat akun
+    const currentUser = window.Auth.getUser();
+    if (!currentUser || currentUser.role !== 'admin') {
+      alert('Akses Ditolak: Hanya Admin yang dapat mendaftarkan akun petugas baru.');
+      window.location.href = 'index.html';
+    }
+
+    function showToast(msg, type = 'error') {
+      const toast = document.getElementById('toast');
+      const icon = toast.querySelector('i');
+      toast.className = `toast ${type}`;
+      
+      if (type === 'success') icon.className = 'fa-solid fa-check-circle';
+      else icon.className = 'fa-solid fa-circle-exclamation';
+
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+      const btn = document.getElementById('btn-register');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+      try {
+        const res = await window.authAPI.register({
+          nama_lengkap: nama,
+          username: user,
+          password: pass,
+          role: role
+        });
+        
+        if (res.success) {
+          showToast('Akun berhasil dibuat!', 'success');
+          document.getElementById('register-form').reset();
+        }
+      } catch (err) {
+        showToast(err.message || 'Pendaftaran gagal.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Daftarkan Akun';
+      }
+    });
+  </script>
+</body>
+</html>

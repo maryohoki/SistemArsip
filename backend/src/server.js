@@ -14,17 +14,23 @@
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+require('dotenv').config();
 
 const arsipRoutes    = require('./routes/arsip');
 const settingsRoutes = require('./routes/settings');
 const aktivitasRoutes= require('./routes/aktivitas');
 const jenisRoutes    = require('./routes/jenis');
 const agendaRoutes   = require('./routes/agenda');
+const authRoutes     = require('./routes/auth');
+
+const { verifyToken } = require('./middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
+app.use(helmet()); // Proteksi dari XSS, clickjacking, dsb.
 // CORS: izinkan frontend (port 8080) mengakses BE (port 3001)
 app.use(cors({
   origin: [
@@ -47,11 +53,15 @@ app.use((req, _res, next) => {
 });
 
 // ── API Routes ────────────────────────────────────────────────────────────────
-app.use('/api/arsip',       arsipRoutes);
-app.use('/api/settings',    settingsRoutes);
-app.use('/api/aktivitas',   aktivitasRoutes);
-app.use('/api/jenis-surat', jenisRoutes);
-app.use('/api/agenda',      agendaRoutes);
+// Auth routes (terbuka)
+app.use('/api/auth', authRoutes);
+
+// Protected routes (harus ada JWT)
+app.use('/api/arsip',       verifyToken, arsipRoutes);
+app.use('/api/settings',    verifyToken, settingsRoutes);
+app.use('/api/aktivitas',   verifyToken, aktivitasRoutes);
+app.use('/api/jenis-surat', verifyToken, jenisRoutes);
+app.use('/api/agenda',      verifyToken, agendaRoutes);
 
 // ── Health Check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
