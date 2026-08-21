@@ -8,18 +8,14 @@ let mysqlProcess = null;
 let nodeProcess = null;
 
 // Konfigurasi path
-const XAMPP_MYSQL = 'C:\\xampp\\mysql\\bin\\mysqld.exe';
+const XAMPP_MYSQL = 'C:\\xampp\\mysql_start.bat';
 const NODE_BACKEND = path.join(__dirname, '../backend/src/server.js');
 
 function startMySQL() {
   console.log('Menjalankan MySQL...');
-  // mysqld.exe berjalan di foreground jika dipanggil langsung
-  mysqlProcess = spawn(XAMPP_MYSQL, {
-    detached: true,
-    stdio: 'ignore'
+  exec(`"${XAMPP_MYSQL}"`, { cwd: 'C:\\xampp' }, (err) => {
+    if (err) console.error('Gagal menjalankan MySQL:', err);
   });
-
-  mysqlProcess.unref(); // Biarkan berjalan independen
 }
 
 function startBackend() {
@@ -94,15 +90,14 @@ function stopServices() {
   if (nodeProcess) {
     nodeProcess.kill('SIGINT');
   }
-  // Matikan mysql melalui mysqladmin lebih aman, atau kill process
-  exec('taskkill /F /IM mysqld.exe', (err) => {
-    if (err) console.log('MySQL mungkin sudah mati atau gagal di-kill.');
+  exec('"C:\\xampp\\mysql_stop.bat"', { cwd: 'C:\\xampp' }, (err) => {
+    if (err) console.log('Gagal menjalankan mysql_stop.bat:', err);
   });
 }
 
 app.on('ready', () => {
-  // Matikan proses mysqld dan node sisa (jika ada) sebelum memulai baru
-  exec('taskkill /F /IM mysqld.exe', () => {
+  // Matikan sisa mysql (jika ada) baru mulai ulang
+  exec('"C:\\xampp\\mysql_stop.bat"', { cwd: 'C:\\xampp' }, () => {
     startMySQL();
     startBackend();
     createWindow();
