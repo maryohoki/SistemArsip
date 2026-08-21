@@ -66,15 +66,15 @@
     .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.4rem; }
     
     .input-wrapper { position: relative; }
-    .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
+    .input-wrapper .icon-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; pointer-events: none; z-index: 1; }
     .input-wrapper input {
-      width: 100%; padding: 12px 15px 12px 45px;
+      width: 100%; padding: 12px 45px 12px 45px;
       border: 1px solid #D1D5DB; border-radius: 8px;
       font-size: 0.95rem; outline: none; transition: all 0.3s ease;
     }
     .input-wrapper input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.1); }
     
-    .toggle-pw { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #9CA3AF; cursor: pointer; }
+    .toggle-pw { position: absolute; right: 15px; left: auto !important; top: 50%; transform: translateY(-50%); color: #9CA3AF; cursor: pointer; z-index: 2; }
     .toggle-pw:hover { color: var(--primary); }
 
     .btn-login {
@@ -112,7 +112,7 @@
       <div class="form-group">
         <label>Username</label>
         <div class="input-wrapper">
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-user icon-left"></i>
           <input type="text" id="username" placeholder="Masukkan username" required autocomplete="username">
         </div>
       </div>
@@ -120,7 +120,7 @@
       <div class="form-group">
         <label>Password</label>
         <div class="input-wrapper">
-          <i class="fa-solid fa-lock"></i>
+          <i class="fa-solid fa-lock icon-left"></i>
           <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
           <i class="fa-solid fa-eye toggle-pw" id="toggle-pw" onclick="togglePassword()"></i>
         </div>

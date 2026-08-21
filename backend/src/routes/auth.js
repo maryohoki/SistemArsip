@@ -107,4 +107,48 @@ router.post('/register', verifyAdmin, async (req, res) => {
   }
 });
 
+// GET /api/auth/users — Daftar semua user (admin only)
+const { verifyToken } = require('../middleware/authMiddleware');
+router.get('/users', verifyAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT id, username, nama_lengkap, role, is_active, last_login, created_at FROM tb_users ORDER BY created_at DESC');
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    console.error('[USERS ERROR]', err);
+    res.status(500).json({ success: false, message: 'Gagal memuat data pengguna.' });
+  }
+});
+
+// PUT /api/auth/change-password — Ganti password sendiri
+router.put('/change-password', verifyToken, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Password lama dan baru wajib diisi.' });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: 'Password baru minimal 8 karakter.' });
+    }
+
+    const [rows] = await pool.query('SELECT * FROM tb_users WHERE id = ?', [req.user.id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User tidak ditemukan.' });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, rows[0].password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Password lama tidak sesuai.' });
+    }
+
+    const hash = await bcrypt.hash(newPassword, 12);
+    await pool.query('UPDATE tb_users SET password = ? WHERE id = ?', [hash, req.user.id]);
+
+    res.json({ success: true, message: 'Password berhasil diubah.' });
+  } catch (err) {
+    console.error('[CHANGE-PW ERROR]', err);
+    res.status(500).json({ success: false, message: 'Terjadi kesalahan pada server.' });
+  }
+});
+
 module.exports = router;

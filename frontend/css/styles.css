@@ -212,6 +212,79 @@ a {
   color: var(--primary);
 }
 
+/* ── Nav Submenu (Accordion) ── */
+.nav-group {
+  position: relative;
+}
+
+.nav-parent {
+  justify-content: flex-start;
+}
+
+.nav-arrow {
+  margin-left: auto;
+  font-size: 12px !important;
+  width: auto !important;
+  transition: transform 0.3s ease;
+}
+
+.nav-group.open .nav-arrow {
+  transform: rotate(180deg);
+}
+
+.nav-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.35s ease;
+  opacity: 0;
+  padding-left: 10px;
+}
+
+.nav-group.open .nav-submenu {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.nav-sub-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 30px;
+  border-radius: var(--radius-md);
+  color: #A7F3D0;
+  font-weight: 400;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nav-sub-item i {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+.nav-sub-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  padding-left: 34px;
+}
+
+.nav-sub-item.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Collapsed sidebar: hide submenu text */
+.sidebar.collapsed .nav-submenu {
+  display: none;
+}
+
+.sidebar.collapsed .nav-arrow {
+  display: none;
+}
+
 .sidebar-footer {
   background-color: rgba(0, 0, 0, 0.15);
   border-radius: var(--radius-md);

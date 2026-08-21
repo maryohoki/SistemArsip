@@ -73,10 +73,28 @@
             <i class="fa-solid fa-clock-rotate-left"></i>
             <span>Riwayat Penerbitan</span>
           </a>
-          <a href="#" class="nav-item" data-view="settings">
-            <i class="fa-solid fa-sliders"></i>
-            <span>Pengaturan Desa</span>
-          </a>
+          <!-- Pengaturan (Submenu Accordion) -->
+          <div class="nav-group" id="nav-group-pengaturan">
+            <a href="#" class="nav-item nav-parent" id="nav-pengaturan-toggle">
+              <i class="fa-solid fa-sliders"></i>
+              <span>Pengaturan</span>
+              <i class="fa-solid fa-chevron-down nav-arrow"></i>
+            </a>
+            <div class="nav-submenu" id="nav-submenu-pengaturan">
+              <a href="#" class="nav-sub-item" data-view="settings">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>Pengaturan Desa</span>
+              </a>
+              <a href="#" class="nav-sub-item" data-view="akun-settings">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Pengaturan Akun</span>
+              </a>
+              <a href="#" class="nav-sub-item" data-view="user-management">
+                <i class="fa-solid fa-users-gear"></i>
+                <span>Manajemen Pengguna</span>
+              </a>
+            </div>
+          </div>
         </nav>
       </div>
 
@@ -752,6 +770,111 @@
                 <input type="file" id="input-import-db" accept=".json" style="display: none;" onchange="handleImportDatabase(event)">
               </label>
             </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE: PENGATURAN AKUN (Ganti Password)
+             ------------------------------------------------------------------ -->
+        <section id="view-akun-settings" class="view-section">
+          <div class="cetak-header">
+            <div class="cetak-title-row">
+              <div>
+                <h1 class="page-title">Pengaturan Akun</h1>
+                <p class="page-subtitle">Kelola profil dan keamanan akun Anda.</p>
+              </div>
+            </div>
+          </div>
+          <div class="settings-card" style="max-width: 600px;">
+            <h3 style="margin-bottom: 1rem; color: #166534;"><i class="fa-solid fa-key"></i> Ganti Password</h3>
+            <form id="form-change-password">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label">Password Lama</label>
+                <input type="password" class="form-input" id="old-password" placeholder="Masukkan password lama" required>
+              </div>
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label">Password Baru</label>
+                <input type="password" class="form-input" id="new-password" placeholder="Minimal 8 karakter" required minlength="8">
+              </div>
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label">Konfirmasi Password Baru</label>
+                <input type="password" class="form-input" id="confirm-password" placeholder="Ketik ulang password baru" required minlength="8">
+              </div>
+              <button type="submit" class="btn-main" id="btn-change-pw">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE: MANAJEMEN PENGGUNA
+             ------------------------------------------------------------------ -->
+        <section id="view-user-management" class="view-section">
+          <div class="cetak-header">
+            <div class="cetak-title-row">
+              <div>
+                <h1 class="page-title">Manajemen Pengguna</h1>
+                <p class="page-subtitle">Daftar akun petugas terdaftar dalam sistem.</p>
+              </div>
+              <button class="btn-main" id="btn-show-add-user" onclick="document.getElementById('add-user-form-wrapper').style.display = document.getElementById('add-user-form-wrapper').style.display === 'none' ? 'block' : 'none'">
+                <i class="fa-solid fa-user-plus"></i> Tambah Petugas Baru
+              </button>
+            </div>
+          </div>
+
+          <!-- Form Tambah User (hidden by default) -->
+          <div id="add-user-form-wrapper" style="display: none; margin-bottom: 1.5rem;">
+            <div class="settings-card">
+              <h3 style="margin-bottom: 1rem; color: #166534;"><i class="fa-solid fa-user-plus"></i> Form Pendaftaran Petugas</h3>
+              <form id="form-add-user">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" class="form-input" id="add-user-nama" placeholder="Nama lengkap petugas" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="add-user-username" placeholder="Username login" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="add-user-password" placeholder="Minimal 8 karakter" required minlength="8">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-input" id="add-user-role">
+                      <option value="petugas">Petugas</option>
+                      <option value="admin">Administrator</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" class="btn-main" id="btn-add-user">
+                  <i class="fa-solid fa-floppy-disk"></i> Daftarkan Akun
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Tabel Daftar User -->
+          <div class="table-responsive">
+            <table class="archive-table" id="table-users">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Lengkap</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Login Terakhir</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-users">
+                <tr><td colspan="6" style="text-align:center; color:#6B7280;">Memuat data pengguna...</td></tr>
+              </tbody>
+            </table>
           </div>
         </section>
 

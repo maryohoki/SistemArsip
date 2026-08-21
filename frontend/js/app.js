@@ -191,21 +191,31 @@ document.addEventListener('DOMContentLoaded', async () => {
      NAVIGATION CONTROLLER
      ───────────────────────────────────────────────────────────────────────── */
   function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
+    const navItems = document.querySelectorAll('.nav-item:not(.nav-parent)');
+    const navSubItems = document.querySelectorAll('.nav-sub-item');
     const viewSections = document.querySelectorAll('.view-section');
 
+    function switchView(targetView, activeEl) {
+      // Remove active from all nav items and sub-items
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      document.querySelectorAll('.nav-sub-item').forEach(nav => nav.classList.remove('active'));
+
+      if (activeEl) activeEl.classList.add('active');
+
+      viewSections.forEach(section => {
+        section.classList.remove('active');
+        if (section.id === `view-${targetView}`) section.classList.add('active');
+      });
+    }
+
+    // Regular nav items (Dashboard, Cetak, Agenda, Template, Riwayat)
     navItems.forEach(item => {
       item.addEventListener('click', async (e) => {
         e.preventDefault();
         const targetView = item.getAttribute('data-view');
+        if (!targetView) return;
 
-        navItems.forEach(nav => nav.classList.remove('active'));
-        item.classList.add('active');
-
-        viewSections.forEach(section => {
-          section.classList.remove('active');
-          if (section.id === `view-${targetView}`) section.classList.add('active');
-        });
+        switchView(targetView, item);
 
         if (targetView === 'dashboard') {
           await initDashboard();
@@ -218,6 +228,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     });
+
+    // Sub nav items (Pengaturan Desa, Pengaturan Akun, Manajemen Pengguna)
+    navSubItems.forEach(item => {
+      item.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const targetView = item.getAttribute('data-view');
+        if (!targetView) return;
+
+        switchView(targetView, item);
+
+        // Highlight parent nav-group
+        const parentGroup = item.closest('.nav-group');
+        if (parentGroup) {
+          parentGroup.querySelector('.nav-parent').classList.add('active');
+        }
+
+        if (targetView === 'user-management') {
+          await loadUserTable();
+        }
+      });
+    });
+
+    // Submenu accordion toggle
+    const navToggle = document.getElementById('nav-pengaturan-toggle');
+    if (navToggle) {
+      navToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const group = document.getElementById('nav-group-pengaturan');
+        if (group) group.classList.toggle('open');
+      });
+    }
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
@@ -1347,6 +1388,124 @@ document.addEventListener('DOMContentLoaded', async () => {
       inputEl.classList.add('input-invalid');
       inputEl.classList.remove('input-valid');
     }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     MODULE: LOAD USER TABLE (Manajemen Pengguna)
+     ───────────────────────────────────────────────────────────────────────── */
+  async function loadUserTable() {
+    const tbody = document.getElementById('tbody-users');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#6B7280;"><i class="fa-solid fa-spinner fa-spin"></i> Memuat...</td></tr>';
+
+    try {
+      const token = window.Auth ? window.Auth.getToken() : null;
+      const res = await fetch('http://localhost:3001/api/auth/users', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const json = await res.json();
+
+      if (!json.success || !json.data || json.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#6B7280;">Belum ada pengguna terdaftar.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = json.data.map((u, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${u.nama_lengkap || '-'}</td>
+          <td><code>${u.username}</code></td>
+          <td><span style="background: ${u.role === 'admin' ? '#FEF3C7' : '#DBEAFE'}; color: ${u.role === 'admin' ? '#92400E' : '#1E40AF'}; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">${u.role}</span></td>
+          <td>${u.is_active ? '<span style="color: #15803D;">● Aktif</span>' : '<span style="color: #DC2626;">● Nonaktif</span>'}</td>
+          <td>${u.last_login ? new Date(u.last_login).toLocaleString('id-ID') : '<span style="color:#9CA3AF;">Belum pernah</span>'}</td>
+        </tr>
+      `).join('');
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#DC2626;">${err.message}</td></tr>`;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     MODULE: GANTI PASSWORD
+     ───────────────────────────────────────────────────────────────────────── */
+  const formChangePw = document.getElementById('form-change-password');
+  if (formChangePw) {
+    formChangePw.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const oldPw = document.getElementById('old-password').value;
+      const newPw = document.getElementById('new-password').value;
+      const confirmPw = document.getElementById('confirm-password').value;
+
+      if (newPw !== confirmPw) {
+        showToast('Password baru dan konfirmasi tidak cocok.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-change-pw');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+      try {
+        const token = window.Auth ? window.Auth.getToken() : null;
+        const res = await fetch('http://localhost:3001/api/auth/change-password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw })
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          showToast('Password berhasil diubah!', 'success');
+          formChangePw.reset();
+        } else {
+          showToast(json.message || 'Gagal mengubah password.', 'error');
+        }
+      } catch (err) {
+        showToast('Koneksi gagal: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru';
+      }
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     MODULE: TAMBAH USER (Manajemen Pengguna)
+     ───────────────────────────────────────────────────────────────────────── */
+  const formAddUser = document.getElementById('form-add-user');
+  if (formAddUser) {
+    formAddUser.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('add-user-nama').value;
+      const username = document.getElementById('add-user-username').value;
+      const password = document.getElementById('add-user-password').value;
+      const role = document.getElementById('add-user-role').value;
+
+      const btn = document.getElementById('btn-add-user');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+      try {
+        const res = await window.authAPI.register({
+          nama_lengkap: nama,
+          username: username,
+          password: password,
+          role: role
+        });
+
+        if (res.success) {
+          showToast('Akun petugas berhasil dibuat!', 'success');
+          formAddUser.reset();
+          document.getElementById('add-user-form-wrapper').style.display = 'none';
+          await loadUserTable();
+        }
+      } catch (err) {
+        showToast(err.message || 'Gagal mendaftarkan akun.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Daftarkan Akun';
+      }
+    });
   }
 
 });
