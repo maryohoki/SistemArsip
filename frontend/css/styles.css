@@ -2510,3 +2510,24 @@ a {
     overflow: visible !important;
   }
 }
+
+/* ========================================================================
+   NIK VALIDATION FEEDBACK
+   ======================================================================== */
+.nik-feedback-valid {
+  color: #15803D !important;
+}
+
+.nik-feedback-invalid {
+  color: #DC2626 !important;
+}
+
+.input-valid {
+  border-color: #22C55E !important;
+  background-color: #F0FDF4 !important;
+}
+
+.input-invalid {
+  border-color: #EF4444 !important;
+  background-color: #FEF2F2 !important;
+}

@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initSettingsForm();
   initQuickSearchModal();
 
+  const mainNikInput = document.getElementById('input-nik');
+  const mainNikFeedback = document.getElementById('nik-validation-feedback');
+  if (mainNikInput && mainNikFeedback) {
+    mainNikInput.addEventListener('input', (e) => handleNikInput(e.target, mainNikFeedback));
+  }
+
   // Ctrl+K shortcut
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -439,6 +445,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
       }
       dynamicContainer.innerHTML = html;
+
+      // Attach realtime NIK validation to dynamic fields
+      if (letterTypeConfig.fields) {
+        letterTypeConfig.fields.forEach(f => {
+          if (f.isNik) {
+            const inputEl = document.querySelector(`[name="spesifik_${f.name}"]`);
+            if (inputEl) {
+              const feedbackDiv = document.createElement('div');
+              feedbackDiv.style.fontSize = '11px';
+              feedbackDiv.style.marginTop = '4px';
+              feedbackDiv.style.display = 'none';
+              inputEl.parentNode.appendChild(feedbackDiv);
+              inputEl.addEventListener('input', (e) => handleNikInput(e.target, feedbackDiv));
+            }
+          }
+        });
+      }
     }
 
     // Attach Submit
@@ -500,6 +523,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Process Form Submit → POST ke backend
   async function processFormSubmission(trxId, typeKey) {
     const templates = _cachedTemplates || window.LETTER_TYPES || {};
+    
+    // Validate Main NIK
+    const mainNik = document.getElementById('input-nik').value;
+    const mainNikValid = validateNIK(mainNik);
+    if (!mainNikValid.valid) {
+      showToast(`NIK Utama Invalid: ${mainNikValid.message}`, 'error');
+      return;
+    }
+    
     const record = {
       id: trxId,
       noSurat: document.getElementById('input-no-surat').value,
@@ -519,10 +551,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const specFields = (templates[typeKey] || {}).fields || [];
+    let dynamicNikValid = true;
     specFields.forEach(f => {
       const el = document.querySelector(`[name="spesifik_${f.name}"]`);
-      if (el) record.spesifik[f.name] = el.value;
+      if (el) {
+        record.spesifik[f.name] = el.value;
+        if (f.isNik) {
+          const check = validateNIK(el.value);
+          if (!check.valid) {
+            showToast(`${f.label} Invalid: ${check.message}`, 'error');
+            dynamicNikValid = false;
+          }
+        }
+      }
     });
+    
+    if (!dynamicNikValid) return;
 
     try {
       const res = await window.arsipAPI.create(record);
@@ -1239,6 +1283,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.disabled = false;
       }
     });
+  }
+
+  function validateNIK(nik) {
+    if (!nik || typeof nik !== 'string') return { valid: false, message: 'NIK tidak boleh kosong.' };
+    if (!/^\d{16}$/.test(nik)) return { valid: false, message: 'NIK harus terdiri dari 16 digit angka.' };
+    const provinsi = parseInt(nik.substring(0, 2));
+    if (provinsi < 11 || provinsi > 96) return { valid: false, message: '2 digit pertama (kode provinsi) tidak sesuai.' };
+    const kabKota = parseInt(nik.substring(2, 4));
+    if (kabKota === 0) return { valid: false, message: 'kode kabupaten/kota tidak boleh 00.' };
+    const kecamatan = parseInt(nik.substring(4, 6));
+    if (kecamatan === 0) return { valid: false, message: 'kode kecamatan tidak boleh 00.' };
+    const tglLahir = parseInt(nik.substring(6, 8));
+    if (!((tglLahir >= 1 && tglLahir <= 31) || (tglLahir >= 41 && tglLahir <= 71))) {
+      return { valid: false, message: 'kode tanggal lahir tidak sesuai (01-31 L / 41-71 P).' };
+    }
+    const bulanLahir = parseInt(nik.substring(8, 10));
+    if (bulanLahir < 1 || bulanLahir > 12) return { valid: false, message: 'kode bulan lahir harus antara 01–12.' };
+    const nomorUrut = parseInt(nik.substring(12, 16));
+    if (nomorUrut === 0) return { valid: false, message: 'nomor urut tidak boleh 0000.' };
+    
+    const jk = tglLahir > 40 ? 'Perempuan' : 'Laki-laki';
+    const tgl = tglLahir > 40 ? tglLahir - 40 : tglLahir;
+    const tahun = parseInt(nik.substring(10, 12));
+    const currentYear = new Date().getFullYear() % 100;
+    const tahunLahir = tahun > currentYear ? 1900 + tahun : 2000 + tahun;
+    
+    return { 
+      valid: true, 
+      message: `✅ NIK Valid — ${jk} | Lahir: ${tgl.toString().padStart(2, '0')}/${bulanLahir.toString().padStart(2, '0')}/${tahunLahir}` 
+    };
+  }
+
+  function handleNikInput(inputEl, feedbackEl) {
+    const val = inputEl.value;
+    if (val.length === 0) {
+      feedbackEl.style.display = 'none';
+      inputEl.classList.remove('input-valid', 'input-invalid');
+      return;
+    }
+    feedbackEl.style.display = 'block';
+    const check = validateNIK(val);
+    if (check.valid) {
+      feedbackEl.textContent = check.message;
+      feedbackEl.className = 'nik-feedback-valid';
+      inputEl.classList.add('input-valid');
+      inputEl.classList.remove('input-invalid');
+    } else {
+      feedbackEl.textContent = `❌ NIK tidak valid: ${check.message}`;
+      feedbackEl.className = 'nik-feedback-invalid';
+      inputEl.classList.add('input-invalid');
+      inputEl.classList.remove('input-valid');
+    }
   }
 
 });

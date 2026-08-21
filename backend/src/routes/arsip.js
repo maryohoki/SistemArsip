@@ -2,6 +2,26 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
+function validateNIK(nik) {
+  if (!nik || typeof nik !== 'string') return { valid: false, message: 'NIK tidak boleh kosong.' };
+  if (!/^\d{16}$/.test(nik)) return { valid: false, message: 'NIK harus terdiri dari 16 digit angka.' };
+  const provinsi = parseInt(nik.substring(0, 2));
+  if (provinsi < 11 || provinsi > 96) return { valid: false, message: '2 digit pertama (kode provinsi) tidak sesuai.' };
+  const kabKota = parseInt(nik.substring(2, 4));
+  if (kabKota === 0) return { valid: false, message: 'kode kabupaten/kota tidak boleh 00.' };
+  const kecamatan = parseInt(nik.substring(4, 6));
+  if (kecamatan === 0) return { valid: false, message: 'kode kecamatan tidak boleh 00.' };
+  const tglLahir = parseInt(nik.substring(6, 8));
+  if (!((tglLahir >= 1 && tglLahir <= 31) || (tglLahir >= 41 && tglLahir <= 71))) {
+    return { valid: false, message: 'kode tanggal lahir tidak sesuai (01-31 L / 41-71 P).' };
+  }
+  const bulanLahir = parseInt(nik.substring(8, 10));
+  if (bulanLahir < 1 || bulanLahir > 12) return { valid: false, message: 'kode bulan lahir harus antara 01–12.' };
+  const nomorUrut = parseInt(nik.substring(12, 16));
+  if (nomorUrut === 0) return { valid: false, message: 'nomor urut tidak boleh 0000.' };
+  return { valid: true };
+}
+
 // GET /api/arsip
 router.get('/', async (req, res) => {
   try {
@@ -147,12 +167,29 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // Validasi NIK — harus 16 digit angka
-    if (!/^\d{16}$/.test(body.nik)) {
+    // Validasi NIK Utama
+    const mainNikCheck = validateNIK(body.nik);
+    if (!mainNikCheck.valid) {
       return res.status(400).json({
         success: false,
-        message: 'Format NIK tidak valid. NIK harus terdiri dari 16 digit angka.'
+        message: `Format NIK Utama tidak valid: ${mainNikCheck.message}`
       });
+    }
+    
+    // Validasi NIK pada field dinamis (spesifik)
+    if (body.spesifik) {
+      const dynamicNikFields = ['nikAlmarhum', 'penerimaKuasaNik'];
+      for (const field of dynamicNikFields) {
+        if (body.spesifik[field]) {
+          const dynNikCheck = validateNIK(body.spesifik[field]);
+          if (!dynNikCheck.valid) {
+            return res.status(400).json({
+              success: false,
+              message: `Format NIK pada ${field} tidak valid: ${dynNikCheck.message}`
+            });
+          }
+        }
+      }
     }
 
     // Validasi panjang nama
