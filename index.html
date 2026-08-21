@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Pengarsipan Administrasi Desa Tanjungsari</title>
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome v6 Free Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- ====================================================================
+         SIDEBAR NAVIGATION
+         ==================================================================== -->
+    <aside class="sidebar" id="main-sidebar">
+      <div>
+        <!-- Brand Row: Logo | Nama Aplikasi | Toggle Button -->
+        <div class="brand-row">
+          <!-- Logo -->
+          <div class="brand-logo">
+            <img src="assets/logo.svg" alt="Logo Desa Tanjungsari">
+          </div>
+          <!-- Nama Aplikasi -->
+          <div class="brand-text">
+            <span class="brand-title">Tanjungsari</span>
+            <span class="brand-name">Administrasi Desa</span>
+          </div>
+          <!-- Desktop Sidebar Toggle Button -->
+          <button class="sidebar-toggle-btn" id="btn-sidebar-toggle" title="Tutup/buka sidebar" aria-label="Toggle sidebar">
+            <i class="fa-solid fa-bars-staggered" id="sidebar-toggle-icon"></i>
+          </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-menu">
+          <a href="#" class="nav-item active" data-view="dashboard" data-tooltip="Dashboard">
+            <i class="fa-solid fa-border-all"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" data-view="cetak" data-tooltip="Cetak Surat">
+            <i class="fa-solid fa-print"></i>
+            <span>Cetak Surat</span>
+          </a>
+          <a href="#" class="nav-item" data-view="template-surat" data-tooltip="Template Surat">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Template Surat</span>
+          </a>
+          <a href="#" class="nav-item" data-view="riwayat" data-tooltip="Riwayat Penerbitan">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Riwayat Penerbitan</span>
+          </a>
+          <a href="#" class="nav-item" data-view="settings" data-tooltip="Pengaturan Desa">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Pengaturan Desa</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="system-version">Versi 1.0.2</div>
+        <div class="system-copyright">© 2026 Digital Desa Tanjungsari</div>
+      </div>
+    </aside>
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- ====================================================================
+         MAIN WRAPPER & TOP HEADER
+         ==================================================================== -->
+    <div class="main-wrapper" id="main-wrapper">
+      <header class="top-header">
+        <!-- Mobile Hamburger -->
+        <button class="header-hamburger" id="btn-header-hamburger" title="Buka menu" aria-label="Buka sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="header-location">
+          <span class="location-sub">Sistem Pengarsipan Desa</span>
+          <span class="location-main">Tanjungsari Digital</span>
+        </div>
+
+        <div class="header-right">
+          <!-- Quick Search Trigger -->
+          <div class="quick-search-trigger" onclick="openQuickSearchModal()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Cari NIK / Nama...</span>
+            <kbd>Ctrl K</kbd>
+          </div>
+
+
+          <!-- User Profile -->
+          <div class="user-profile">
+            <div class="user-info">
+              <div class="user-name">Admin Desa</div>
+              <div class="user-role">Petugas Pelayanan</div>
+            </div>
+            <div class="user-avatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           MAIN CONTENT AREA
+           ==================================================================== -->
+      <main class="content-area">
+
+        <!-- ------------------------------------------------------------------
+             MODULE 1: DASHBOARD VIEW
+             ------------------------------------------------------------------ -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- Welcome Banner -->
+          <div class="dashboard-header">
+            <div>
+              <span class="tag-badge">TANJUNGSARI DIGITAL</span>
+              <h1 class="welcome-title">Selamat Datang, Admin Desa</h1>
+              <p class="welcome-subtitle">
+                Ringkasan aktivitas dan status penerbitan surat hari ini. Mari lanjutkan pelayanan terbaik untuk
+                masyarakat Desa Tanjungsari.
+              </p>
+            </div>
+            <div class="header-actions">
+              <div class="date-chip">
+                <i class="fa-regular fa-calendar" style="color: #14532D;"></i>
+                <span id="current-date-text">Selasa, 4 Agu 2026</span>
+              </div>
+              <button class="btn-gold" onclick="document.querySelector('[data-view=\'cetak\']').click()">
+                <i class="fa-solid fa-plus"></i> Buat Surat Baru
+              </button>
+            </div>
+          </div>
+
+          <!-- Metric Cards Section -->
+          <div class="section-header-inline">
+            <h2 class="section-title">
+              <i class="fa-solid fa-chart-simple" style="color: #14532D;"></i> Ringkasan Penerbitan
+            </h2>
+            <div class="filter-pills">
+              <button class="pill-btn active">Hari ini</button>
+              <button class="pill-btn">Bulan ini</button>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <!-- Card 1: SKU -->
+            <div class="metric-card">
+              <div>
+                <div class="metric-icon-wrapper icon-sku">
+                  <i class="fa-solid fa-store"></i>
+                </div>
+                <div class="metric-number" id="stat-sku-count">42</div>
+                <div class="metric-label">Surat Keterangan Usaha (SKU)</div>
+              </div>
+              <div class="metric-trend trend-up">
+                <i class="fa-solid fa-arrow-trend-up"></i> +12% minggu ini
+              </div>
+            </div>
+
+            <!-- Card 2: SKTM -->
+            <div class="metric-card">
+              <div>
+                <div class="metric-icon-wrapper icon-sktm">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="metric-number" id="stat-sktm-count">18</div>
+                <div class="metric-label">Surat Keterangan Tidak Mampu</div>
+              </div>
+              <div class="metric-trend trend-stable">
+                <i class="fa-solid fa-minus"></i> Stabil
+              </div>
+            </div>
+
+            <!-- Card 3: Kematian -->
+            <div class="metric-card">
+              <div>
+                <div class="metric-icon-wrapper icon-kematian">
+                  <i class="fa-solid fa-church"></i>
+                </div>
+                <div class="metric-number" id="stat-kematian-count">5</div>
+                <div class="metric-label">Surat Keterangan Kematian</div>
+              </div>
+              <div class="metric-trend trend-stable">
+                <i class="fa-solid fa-minus"></i> -
+              </div>
+            </div>
+
+            <!-- Card 4: Nikah -->
+            <div class="metric-card">
+              <div>
+                <div class="metric-icon-wrapper icon-nikah">
+                  <i class="fa-solid fa-heart"></i>
+                </div>
+                <div class="metric-number" id="stat-nikah-count">12</div>
+                <div class="metric-label">Surat Keterangan Menikah</div>
+              </div>
+              <div class="metric-trend trend-up">
+                <i class="fa-solid fa-arrow-trend-up"></i> +2% minggu ini
+              </div>
+            </div>
+
+            <!-- Card 5: Surat TU Lainnya -->
+            <div class="metric-card">
+              <div>
+                <div class="metric-icon-wrapper icon-tu">
+                  <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <div class="metric-number" id="stat-tu-count">86</div>
+                <div class="metric-label">Surat TU Lainnya</div>
+              </div>
+              <div class="metric-trend trend-stable" style="gap:4px;">
+                <span class="badge-category cat-domisili" style="font-size:10px; padding:2px 6px;">Domisili</span>
+                <span class="badge-category cat-lainnya" style="font-size:10px; padding:2px 6px;">Pengantar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts & Recent Activity Grid -->
+          <div class="dashboard-grid-2">
+            <!-- Left: Trend Bar Chart -->
+            <div class="card-box">
+              <div class="card-header">
+                <h3 class="card-header-title">Tren Permintaan Surat</h3>
+                <i class="fa-solid fa-ellipsis-vertical" style="color: #94A3B8; cursor: pointer;"></i>
+              </div>
+              <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Right: Activity Feed Card (Dark Green) -->
+            <div class="activity-card">
+              <div>
+                <div class="activity-header">
+                  <h3 class="activity-header-title">Aktivitas Terakhir</h3>
+                  <span class="live-badge">
+                    <span class="live-dot"></span> Live
+                  </span>
+                </div>
+                <div class="activity-list" id="activity-feed-list">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+              <div class="activity-footer">
+                <a href="#" class="link-white" onclick="document.querySelector('[data-view=\'riwayat\']').click()">
+                  Lihat Semua Aktivitas <i class="fa-solid fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 2: CETAK SURAT VIEW (FORM & PREVIEW ENGINE)
+             ------------------------------------------------------------------ -->
+        <section id="view-cetak" class="view-section">
+          <div class="cetak-header">
+            <div class="cetak-title-row">
+              <div>
+                <h1 class="page-title">Cetak Surat Administrasi</h1>
+                <p class="page-desc">
+                  Pilih jenis layanan surat dan lengkapi data pemohon untuk menghasilkan dokumen resmi yang tercatat di
+                  sistem desa.
+                </p>
+              </div>
+              <div class="filter-pills">
+                <span style="font-size: 12px; color: #64748B; font-weight: 500; padding: 4px 12px;">Langkah 1 dari
+                  2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cetak-layout-grid">
+            <!-- Left Side: Letter Type Selector Cards -->
+            <div>
+              <div
+                style="font-size: 13px; font-weight: 700; color: #14532D; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Pilih Jenis Surat
+              </div>
+              <div class="letter-type-selector" id="letter-type-selector-list">
+                <!-- Dynamically Rendered by JS -->
+              </div>
+              <!-- Placeholder for Active Letter Indicator (Surat Lainnya) -->
+              <div id="active-letter-indicator-container"></div>
+            </div>
+
+            <!-- Right Side: Dynamic Form Container -->
+            <div class="form-container-card">
+              <form id="form-cetak-surat">
+                <div class="form-header-bar">
+                  <div>
+                    <h2 class="form-header-title" id="form-letter-title">Formulir Penerbitan SKU</h2>
+                    <p class="form-header-subtitle">Pastikan data sesuai dengan KTP dan KK pemohon.</p>
+                  </div>
+                  <span class="trx-id-tag" id="form-trx-id">TRX-2993-SKU</span>
+                </div>
+
+                <!-- Row 1: Nomor Surat & Auto Fill Button -->
+                <div class="form-group">
+                  <label class="form-label">
+                    <span>Nomor Surat Resmi</span>
+                    <button type="button" class="btn-fill-demo" onclick="fillDemoData()">
+                      <i class="fa-solid fa-wand-magic-sparkles"></i> Isi Data Demo Otomatis
+                    </button>
+                  </label>
+                  <input type="text" class="form-input" id="input-no-surat" readonly
+                    style="font-family: monospace; font-weight: 600; color: #14532D;">
+                </div>
+
+                <!-- Row 2: NIK & Nama -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nomor Induk Kependudukan (NIK) <span
+                        style="color:#EF4444">*</span></label>
+                    <input type="text" class="form-input" id="input-nik" placeholder="16 digit NIK sesuai KTP"
+                      maxlength="16" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Nama Lengkap Pemohon <span style="color:#EF4444">*</span></label>
+                    <input type="text" class="form-input" id="input-nama" placeholder="Sesuai KTP" required>
+                  </div>
+                </div>
+
+                <!-- Row 3: Tempat & Tgl Lahir -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Tempat Lahir <span style="color:#EF4444">*</span></label>
+                    <input type="text" class="form-input" id="input-tmp-lahir" placeholder="Misal: Sumedang" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tanggal Lahir <span style="color:#EF4444">*</span></label>
+                    <input type="date" class="form-input" id="input-tgl-lahir" required>
+                  </div>
+                </div>
+
+                <!-- Row 4: Jenis Kelamin & Agama & Pekerjaan -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Jenis Kelamin</label>
+                    <select class="form-select" id="select-jk">
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Agama</label>
+                    <select class="form-select" id="select-agama">
+                      <option value="Islam">Islam</option>
+                      <option value="Kristen">Kristen</option>
+                      <option value="Katolik">Katolik</option>
+                      <option value="Hindu">Hindu</option>
+                      <option value="Buddha">Buddha</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Pekerjaan <span style="color:#EF4444">*</span></label>
+                  <input type="text" class="form-input" id="input-pekerjaan"
+                    placeholder="Misal: Wiraswasta / Petani / Karyawan Swasta" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Alamat Domisili <span style="color:#EF4444">*</span></label>
+                  <input type="text" class="form-input" id="input-alamat" placeholder="Dusun, RT/RW, Desa Tanjungsari"
+                    required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Keperluan Surat <span style="color:#EF4444">*</span></label>
+                  <input type="text" class="form-input" id="input-keperluan"
+                    placeholder="Misal: Persyaratan Kredit Bank Mandiri / Beasiswa / KUA" required>
+                </div>
+
+                <!-- Dynamic Specific Fields Container -->
+                <div id="dynamic-specific-fields">
+                  <!-- Rendered dynamically depending on SKU / SKTM / Nikah / etc. -->
+                </div>
+
+                <!-- Action Footer -->
+                <div class="form-actions-footer">
+                  <button type="button" class="btn-secondary"
+                    onclick="document.querySelector('[data-view=\'dashboard\']').click()">
+                    Batalkan
+                  </button>
+                  <button type="submit" class="btn-gold">
+                    <i class="fa-solid fa-print"></i> Cetak Surat Sekarang
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 3: RIWAYAT PENERBITAN (DIGITAL ARCHIVE TABLE)
+             ------------------------------------------------------------------ -->
+        <section id="view-riwayat" class="view-section">
+          <div class="cetak-header">
+            <div class="cetak-title-row">
+              <div>
+                <h1 class="page-title">Riwayat Penerbitan</h1>
+                <p class="page-desc">
+                  Arsip dokumen administrasi yang telah diterbitkan. Lacak, kelola, dan pratinjau surat digital dengan
+                  mudah.
+                </p>
+              </div>
+              <div class="header-actions">
+                <button class="btn-secondary" onclick="exportArchiveCSV()">
+                  <i class="fa-solid fa-file-csv" style="color: #16A34A;"></i> Ekspor Data CSV
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Archive Toolbar -->
+          <div class="archive-toolbar">
+            <!-- Top Row: Title and Search -->
+            <div class="filter-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 12px;">
+              <div class="category-title" style="font-size: 15px; font-weight: 700; color: #14532D; text-transform: uppercase;">
+                KATEGORI:
+              </div>
+              
+              <!-- Right Side: Search Box -->
+              <div class="search-wrapper" style="width: 450px; max-width: 100%;">
+                <div class="search-box" style="width: 100%;">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="archive-search-input" placeholder="No. Surat / Nama Pemohon / NIK...">
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Row: Category Tags -->
+            <div class="category-tags" style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <button class="cat-btn active" data-cat="ALL">Semua</button>
+              <button class="cat-btn" data-cat="SKU">SKU</button>
+              <button class="cat-btn" data-cat="LETTER_C_BANK">Letter C / Bank</button>
+              <button class="cat-btn" data-cat="SKTM_PELAJAR">SKTM Pelajar</button>
+              <button class="cat-btn" data-cat="SKTM_UMUM">SKTM Umum</button>
+              <button class="cat-btn" data-cat="SKTM_PERCERAIAN">SKTM Perceraian</button>
+              <button class="cat-btn" data-cat="SKTM_UPCK">SKTM UPCK</button>
+              <button class="cat-btn" data-cat="SKTM_PBI_BPJS">SKTM PBI/BPJS</button>
+              <button class="cat-btn" data-cat="UPCPK">UPCPK</button>
+              <button class="cat-btn" data-cat="PINDAH_DATANG">Pindah Datang</button>
+              <button class="cat-btn" data-cat="PINDAH_KELUAR">Pindah Keluar</button>
+              <button class="cat-btn" data-cat="PINDAH_KABUPATEN">Pindah Kab/Kota</button>
+              <button class="cat-btn" data-cat="NA_NIKAH">NA Nikah</button>
+              <button class="cat-btn" data-cat="TAKSIRAN_TANAH">Taksiran Tanah</button>
+              <button class="cat-btn" data-cat="KETERANGAN_KERJA">Keterangan Kerja</button>
+              <button class="cat-btn" data-cat="IZIN_KERAMAIAN">Izin Keramaian</button>
+              <button class="cat-btn" data-cat="SURAT_KUASA">Surat Kuasa</button>
+              <button class="cat-btn" data-cat="DTSEN_DTKS">DTSEN / DTKS</button>
+              <button class="cat-btn" data-cat="AHLI_WARIS">Ahli Waris</button>
+              <button class="cat-btn" data-cat="PDAM_TELEPON">PDAM / Telepon</button>
+              <button class="cat-btn" data-cat="PEMAKAMAN">Pemakaman</button>
+              <button class="cat-btn" data-cat="BEDA_NAMA">Beda Nama</button>
+              <button class="cat-btn" data-cat="BELUM_NIKAH">Belum Nikah</button>
+              <button class="cat-btn" data-cat="SUDAH_NIKAH">Sudah Nikah</button>
+              <button class="cat-btn" data-cat="STATUS_JANDA">Status Janda/Duda</button>
+              <button class="cat-btn" data-cat="KEMATIAN">Kematian</button>
+              <button class="cat-btn" data-cat="NIKAH">Menikah</button>
+              <button class="cat-btn" data-cat="DOMISILI">Domisili</button>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-card">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>NO. SURAT</th>
+                  <th>PEMOHON</th>
+                  <th>KATEGORI</th>
+                  <th>TANGGAL TERBIT</th>
+                  <th>AKSI</th>
+                </tr>
+              </thead>
+              <tbody id="archive-table-body">
+                <!-- Dynamic Rows -->
+              </tbody>
+            </table>
+
+            <!-- Table Pagination -->
+            <div class="table-pagination">
+              <div class="pagination-info" id="pagination-info-text">
+                Menampilkan 1–10 dari 45 data
+              </div>
+              <div class="pagination-controls">
+                <button class="page-nav-btn" id="btn-prev-page">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="page-nav-btn" id="btn-next-page">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 4: PENGATURAN DESA (VILLAGE SETTINGS)
+             ------------------------------------------------------------------ -->
+        <section id="view-settings" class="view-section">
+          <div class="cetak-header">
+            <h1 class="page-title">Pengaturan Profil Desa</h1>
+            <p class="page-desc">
+              Atur identitas resmi desa dan data pejabat penandatangan yang akan dicetak pada Kop Surat & Naskah Dinas.
+            </p>
+          </div>
+
+          <div class="card-box" style="max-width: 800px;">
+            <form id="form-settings-desa">
+              <div class="form-group">
+                <label class="form-label">Nama Kepala Desa / Pejabat Penandatangan</label>
+                <input type="text" class="form-input" id="set-nama-kades" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">NIP / NIAP Kepala Desa</label>
+                <input type="text" class="form-input" id="set-nip-kades" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Alamat Kantor Desa</label>
+                <input type="text" class="form-input" id="set-alamat-desa" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Email Resmi Desa</label>
+                  <input type="email" class="form-input" id="set-email-desa" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nomor Telepon / Hotline</label>
+                  <input type="text" class="form-input" id="set-telp-desa" required>
+                </div>
+              </div>
+
+              <div style="margin-top: 20px; text-align: right;">
+                <button type="submit" class="btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan Pengaturan
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Database Management & Backup Card -->
+          <div class="card-box" style="max-width: 800px; margin-top: 24px;">
+            <h3 style="font-size: 16px; font-weight: 700; color: #1E293B; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-database" style="color: #0284C7;"></i> Manajemen & Backup Database Desa
+            </h3>
+            <p style="font-size: 13px; color: #64748B; margin-bottom: 16px; line-height: 1.5;">
+              Unduh data pengarsipan dalam format <strong>SQL (MySQL/phpMyAdmin/MariaDB)</strong> atau <strong>JSON</strong>. Anda juga dapat mengimpor file backup JSON untuk memulihkan data sistem secara instan.
+            </p>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+              <button type="button" class="btn-primary" onclick="window.dataStore.exportSQL()" style="background-color: #0284C7; border-color: #0284C7;">
+                <i class="fa-solid fa-file-code"></i> Download Database (.SQL)
+              </button>
+              <button type="button" class="btn-secondary" onclick="window.dataStore.exportJSON()">
+                <i class="fa-solid fa-file-arrow-down"></i> Export Database (.JSON)
+              </button>
+              <label class="btn-secondary" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-file-arrow-up"></i> Import Database (.JSON)
+                <input type="file" id="input-import-db" accept=".json" style="display: none;" onchange="handleImportDatabase(event)">
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 5: MODUL TEMPLATE SURAT OTOMATIS
+             ------------------------------------------------------------------ -->
+        <section id="view-template-surat" class="view-section">
+          <div class="cetak-header">
+            <div class="cetak-title-row">
+              <div>
+                <h1 class="page-title">Katalog Template Surat Resmi Desa</h1>
+                <p class="page-desc">
+                  Pilih dari koleksi template Naskah Dinas Desa Tanjungsari atau tambah template kustom. Memudahkan pelayanan administrasi tanpa harus mengetik ulang surat dari awal.
+                </p>
+              </div>
+              <div class="header-actions">
+                <button class="btn-gold" onclick="openTemplateEditorModal()">
+                  <i class="fa-solid fa-plus"></i> Tambah Template Baru
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Template Toolbar & Category Filter -->
+          <div class="archive-toolbar" style="margin-bottom: 20px;">
+            <div class="archive-filter-row">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span style="font-size:12px; font-weight:700; color:#64748B; text-transform:uppercase;">KATEGORI:</span>
+                <div class="category-tags" id="template-category-filters">
+                  <button class="cat-btn active" data-tpl-cat="ALL">Semua Template</button>
+                  <button class="cat-btn" data-tpl-cat="usaha">Kegiatan Usaha</button>
+                  <button class="cat-btn" data-tpl-cat="bantuan">Bantuan & SKTM</button>
+                  <button class="cat-btn" data-tpl-cat="kependudukan">Kependudukan</button>
+                  <button class="cat-btn" data-tpl-cat="nikah_kematian">Nikah & Kematian</button>
+                  <button class="cat-btn" data-tpl-cat="rekomendasi">Rekomendasi</button>
+                </div>
+              </div>
+
+              <!-- Template Search Bar -->
+              <div class="search-inputs-group">
+                <div class="search-box">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="template-search-input" placeholder="Cari nama template, kode surat, atau variabel...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid Catalog Container -->
+          <div class="template-catalog-grid" id="template-catalog-grid">
+            <!-- Dynamically Rendered by JS -->
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 1: LIVE LETTER PREVIEW & PRINTING MODAL
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-preview-letter">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-file-contract" style="color: #14532D; margin-right: 8px;"></i>
+          Pratinjau Surat Resmi Digital Desa
+        </h3>
+        <button class="modal-close" onclick="closePreviewModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="preview-modal-body">
+        <!-- Rendered official document HTML -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closePreviewModal()">Tutup</button>
+        <button class="btn-gold" id="btn-modal-print">
+          <i class="fa-solid fa-print"></i> Cetak / Simpan Ke PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: DETAIL TEMPLATE & DRAFT PREVIEW MODAL
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-template-detail">
+    <div class="modal-dialog" style="max-width: 900px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="template-detail-title">
+          <i class="fa-solid fa-file-lines" style="color: #14532D; margin-right: 8px;"></i>
+          Detail Template & Draf Surat
+        </h3>
+        <button class="modal-close" onclick="closeTemplateDetailModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="template-detail-modal-body">
+        <!-- Rendered draft preview & required documents -->
+      </div>
+
+      <div class="modal-footer" id="template-detail-modal-footer">
+        <button class="btn-secondary" onclick="closeTemplateDetailModal()">Tutup</button>
+        <button class="btn-gold" id="btn-use-template-modal">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Gunakan Template Ini Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 3: TEMPLATE EDITOR & CUSTOM CREATOR MODAL
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-template-editor">
+    <div class="modal-dialog" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="editor-modal-title">
+          <i class="fa-solid fa-pen-to-square" style="color: #14532D; margin-right: 8px;"></i>
+          Tambah / Edit Template Surat Kustom
+        </h3>
+        <button class="modal-close" onclick="closeTemplateEditorModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-template-editor">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+          <input type="hidden" id="editor-template-id">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kode Klasifikasi Surat <span style="color:#EF4444">*</span></label>
+              <input type="text" class="form-input" id="editor-code" placeholder="Misal: 470, 460, 300" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori Layanan <span style="color:#EF4444">*</span></label>
+              <select class="form-select" id="editor-category-group">
+                <option value="usaha">Kegiatan Usaha</option>
+                <option value="bantuan">Bantuan & SKTM</option>
+                <option value="kependudukan">Kependudukan</option>
+                <option value="nikah_kematian">Nikah & Kematian</option>
+                <option value="rekomendasi" selected>Rekomendasi / Lainnya</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Judul Lengkap Surat <span style="color:#EF4444">*</span></label>
+            <input type="text" class="form-input" id="editor-title" placeholder="Misal: Surat Keterangan Rekomendasi Karang Taruna" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Judul Singkat <span style="color:#EF4444">*</span></label>
+            <input type="text" class="form-input" id="editor-short-title" placeholder="Misal: Rekomendasi Karang Taruna" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Deskripsi Ringkas Template <span style="color:#EF4444">*</span></label>
+            <textarea class="form-textarea" id="editor-desc" rows="2" placeholder="Jelaskan fungsi dan peruntukan surat ini bagi warga desa..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Daftar Persyaratan Berkas Warga (Satu per baris)</label>
+            <textarea class="form-textarea" id="editor-syarat" rows="3" placeholder="Fotokopi KTP Pemohon&#10;Fotokopi Kartu Keluarga (KK)&#10;Surat Pengantar RT/RW Setempat"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeTemplateEditorModal()">Batal</button>
+          <button type="submit" class="btn-gold">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan Template Surat
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-overlay" id="modal-preview-letter">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-file-contract" style="color: #14532D; margin-right: 8px;"></i>
+          Pratinjau Surat Resmi Digital Desa
+        </h3>
+        <button class="modal-close" onclick="closePreviewModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="preview-modal-body">
+        <!-- Rendered official document HTML -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closePreviewModal()">Tutup</button>
+        <button class="btn-gold" id="btn-modal-print">
+          <i class="fa-solid fa-print"></i> Cetak / Simpan Ke PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: SURAT LAINNYA
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-surat-lainnya">
+    <div class="modal-dialog" style="max-width: 800px; width: 90%;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-list" style="color: #14532D; margin-right: 8px;"></i>
+          Pilih Jenis Surat Lainnya
+        </h3>
+        <button class="modal-close" onclick="closeSuratLainnyaModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div style="padding: 16px; border-bottom: 1px solid #E2E8F0;">
+        <div class="search-box" style="width: 100%;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="search-surat-lainnya" placeholder="Cari jenis surat (misal: BPJS, Pindah, Domisili)...">
+        </div>
+      </div>
+      <div class="modal-body" style="max-height: 500px; overflow-y: auto; background-color: #F8FAFC; padding: 20px;">
+        <div class="letter-type-selector" id="surat-lainnya-grid">
+          <!-- Rendered by JS -->
+        </div>
+        <div id="surat-lainnya-empty" style="display: none; text-align: center; color: #94A3B8; padding: 40px 20px;">
+          <i class="fa-solid fa-magnifying-glass" style="font-size: 24px; margin-bottom: 12px; opacity: 0.5;"></i>
+          <p>Jenis surat tidak ditemukan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: QUICK SEARCH MODAL (Ctrl + K)
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-quick-search">
+    <div class="modal-dialog" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Pencarian Cepat Arsip Surat</h3>
+        <button class="modal-close" onclick="closeQuickSearchModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div style="padding: 16px; border-bottom: 1px solid #E2E8F0;">
+        <div class="search-box" style="width: 100%;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="quick-search-input" placeholder="Masukkan NIK, Nama Pemohon, atau No. Surat..."
+            autofocus>
+        </div>
+      </div>
+      <div class="modal-body" id="quick-search-results" style="max-height: 350px; padding: 0;">
+        <div style="padding: 20px; text-align: center; color: #94A3B8;">
+          Ketik kata kunci untuk mencari data...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/letter-templates.js"></script>
+  <script src="js/chart-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

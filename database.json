@@ -1,0 +1,297 @@
+{
+  "appName": "Sistem Pengarsipan Administrasi Desa Tanjungsari",
+  "version": "1.0.0",
+  "exportedAt": "2026-08-11T00:10:00Z",
+  "settings": {
+    "kabupaten": "Kabupaten Tasikmalaya",
+    "kecamatan": "Kecamatan Salawu",
+    "desa": "Desa Tanjungsari",
+    "alamat": "Jl. Raya Tasikmalaya-Garut KM. 34 Kp. Langkob RT 004 RW 001",
+    "kodePos": "46471",
+    "email": "desatanjungsarisalawu@gmail.com",
+    "telepon": "+62 899-9273-848",
+    "namaKades": "ATEP ABDUL CHOLIK",
+    "nipKades": "-",
+    "jabatanPenandatangan": "Kepala Desa Tanjungsari"
+  },
+  "records": [
+    {
+      "id": "TRX-4918-SKTMPBIBPJS",
+      "noSurat": "440.2/018/DS-TS/VIII/2026",
+      "nik": "3211042506830007",
+      "nama": "Endang Suherman",
+      "tmpLahir": "Tasikmalaya",
+      "tglLahir": "1983-06-25",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Buruh Lepas",
+      "alamat": "Dusun Tanjungsari RT 02 RW 01",
+      "kategori": "SKTM_PBI_BPJS",
+      "keperluan": "Pengusulan Pendaftaran Kepesertaan BPJS Kesehatan PBI APBD (Gratis)",
+      "spesifik": {
+        "jenisPengusulan": "Pendaftaran BPJS PBI APBD Baru",
+        "faskesTujuan": "Puskesmas Salawu Kabupaten Tasikmalaya",
+        "noBpjsLama": "-"
+      },
+      "tglTerbit": "2026-08-10",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4915-SKTMUPCK",
+      "noSurat": "440.1/017/DS-TS/VIII/2026",
+      "nik": "3211041503790005",
+      "nama": "Herman Permana",
+      "tmpLahir": "Tasikmalaya",
+      "tglLahir": "1979-03-15",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Buruh Tani",
+      "alamat": "Dusun Langkob RT 03 RW 02",
+      "kategori": "SKTM_UPCK",
+      "keperluan": "Pengajuan Jaminan Pelayanan Kesehatan Desa & Rekomendasi Penanggulangan Kemiskinan (UPCK)",
+      "spesifik": {
+        "namaPasienWarga": "Herman Permana (Diri Sendiri)",
+        "tujuanUpck": "Dinas Kesehatan / UPCK & RSUD SMC Tasikmalaya",
+        "keperluanUpck": "Permohonan Jaminan Pelayanan Kesehatan Rawat Inap"
+      },
+      "tglTerbit": "2026-08-09",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4912-SKTMPERCERAIAN",
+      "noSurat": "460/016/DS-TS/VIII/2026",
+      "nik": "3211046208940001",
+      "nama": "Nani Sumarni",
+      "tmpLahir": "Tasikmalaya",
+      "tglLahir": "1994-08-22",
+      "jk": "Perempuan",
+      "agama": "Islam",
+      "pekerjaan": "Mengurus Rumah Tangga",
+      "alamat": "Dusun Margaluyu RT 03 RW 01",
+      "kategori": "SKTM_PERCERAIAN",
+      "keperluan": "Permohonan Pembebasan Biaya Perkara (Prodeo) Gugatan Cerai di Pengadilan Agama",
+      "spesifik": {
+        "pihakLawan": "Jaka Permana (Tergugat / Suami)",
+        "pengadilanTujuan": "Pengadilan Agama Singaparna Kabupaten Tasikmalaya",
+        "tujuanProdeo": "Persyaratan Layanan Bantuan Hukum & Pembebasan Biaya Perkara (Prodeo)"
+      },
+      "tglTerbit": "2026-08-08",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4910-SKTMPELAJAR",
+      "noSurat": "460/015/DS-TS/VIII/2026",
+      "nik": "3211045012050003",
+      "nama": "Rina Nurbaeti",
+      "tmpLahir": "Tasikmalaya",
+      "tglLahir": "2005-12-10",
+      "jk": "Perempuan",
+      "agama": "Islam",
+      "pekerjaan": "Pelajar / Mahasiswa",
+      "alamat": "Dusun Langkob RT 01 RW 02",
+      "kategori": "SKTM_PELAJAR",
+      "keperluan": "Pengajuan Beasiswa Pendidikan KIP Kuliah / Keringanan Biaya UKT",
+      "spesifik": {
+        "namaSiswa": "Rina Nurbaeti (Anak Kandung H. Sobar)",
+        "namaSekolah": "Universitas Siliwangi (UNSIL) Tasikmalaya",
+        "kelasJurusan": "Semester 3 / Program Studi Pendidikan Bahasa Inggris",
+        "tujuanBeasiswa": "Persyaratan Registrasi Beasiswa KIP Kuliah Pemkab Tasikmalaya"
+      },
+      "tglTerbit": "2026-08-07",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4908-SKTMUMUM",
+      "noSurat": "460/014/DS-TS/VIII/2026",
+      "nik": "3211041003750009",
+      "nama": "Asep Saepudin",
+      "tmpLahir": "Tasikmalaya",
+      "tglLahir": "1978-04-12",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Buruh Harian Lepas",
+      "alamat": "Dusun Sukamaju RT 02 RW 03",
+      "kategori": "SKTM_UMUM",
+      "keperluan": "Pengajuan Keringanan Biaya Administrasi & Permohonan Bantuan Sosial Desa",
+      "spesifik": {
+        "tujuanUmum": "Permohonan Bantuan Sosial & Keringanan Beban Ekonomi Keluarga",
+        "jumlahTanggungan": "4 Orang (1 Istri, 3 Anak)",
+        "statusKeluarga": "Keluarga Kurang Mampu (Terdaftar DTKS Desil 1)"
+      },
+      "tglTerbit": "2026-08-06",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4905-UPCPK",
+      "noSurat": "440/013/DS-TS/VIII/2026",
+      "nik": "3211041807850002",
+      "nama": "Dadang Hendra",
+      "tmpLahir": "Tasikmalaya",
+      "tglLahir": "1985-07-18",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Buruh Tani",
+      "alamat": "Dusun Langkob RT 04 RW 01",
+      "kategori": "UPCPK",
+      "keperluan": "Pengajuan Jaminan Pelayanan Kesehatan / UPCPK Rawat Inap RSUD",
+      "spesifik": {
+        "namaPasien": "Dadang Hendra (Diri Sendiri)",
+        "hubunganPasien": "Diri Sendiri",
+        "namaRumahSakit": "RSUD SMC Kabupaten Tasikmalaya",
+        "diagnosaPenyakit": "Pengobatan Layanan Rawat Inap Spesialis"
+      },
+      "tglTerbit": "2026-08-05",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4901-SKU",
+      "noSurat": "470/012/DS-TS/VIII/2026",
+      "nik": "3211041508820001",
+      "nama": "Suparman",
+      "tmpLahir": "Sumedang",
+      "tglLahir": "1982-08-15",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Wiraswasta",
+      "alamat": "Dusun Tanjungsari RT 01 RW 04",
+      "kategori": "SKU",
+      "keperluan": "Persyaratan Pengajuan Kredit Usaha Bank Mandiri",
+      "spesifik": {
+        "namaUsaha": "Toko Kelontong Suparman Jaya",
+        "jenisUsaha": "Perdagangan Sembako & Bahan Pokok",
+        "lokasiUsaha": "Jl. Raya Tanjungsari No. 12 RT 01 RW 04",
+        "tahunBerdiri": "2018"
+      },
+      "tglTerbit": "2026-08-04",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4899-SKTM",
+      "noSurat": "460/011/DS-TS/VIII/2026",
+      "nik": "3211042003750004",
+      "nama": "Budi Santoso",
+      "tmpLahir": "Bandung",
+      "tglLahir": "1975-03-20",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Buruh Harian Lepas",
+      "alamat": "Dusun Sukamaju RT 03 RW 02",
+      "kategori": "SKTM",
+      "keperluan": "Pengajuan Keringanan Biaya Rumah Sakit Umum Sumedang",
+      "spesifik": {
+        "namaAnak": "Budi Santoso (Diri Sendiri)",
+        "tujuanSktm": "Pengobatan Rawat Inap RSUD Sumedang"
+      },
+      "tglTerbit": "2026-08-03",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4892-NIKAH",
+      "noSurat": "474.2/010/DS-TS/VIII/2026",
+      "nik": "3211045211980003",
+      "nama": "Siti Aminah",
+      "tmpLahir": "Sumedang",
+      "tglLahir": "1998-11-12",
+      "jk": "Perempuan",
+      "agama": "Islam",
+      "pekerjaan": "Karyawan Swasta",
+      "alamat": "Dusun Margaluyu RT 02 RW 01",
+      "kategori": "NIKAH",
+      "keperluan": "Persyaratan Administrasi Pendaftaran Nikah di KUA Tanjungsari",
+      "spesifik": {
+        "namaPasangan": "Ahmad Budi",
+        "binBintiPasangan": "Bin H. Abdullah",
+        "alamatPasangan": "Kecamatan Jatinangor, Sumedang"
+      },
+      "tglTerbit": "2026-08-02",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4885-DOMISILI",
+      "noSurat": "470/009/DS-TS/VII/2026",
+      "nik": "3211041005900002",
+      "nama": "Dadang Hidayat",
+      "tmpLahir": "Majalengka",
+      "tglLahir": "1990-05-10",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "PNS / ASN",
+      "alamat": "Dusun Tanjungsari RT 04 RW 05",
+      "kategori": "DOMISILI",
+      "keperluan": "Persyaratan Pembukaan Rekening Bank BJB & Domisili Usaha",
+      "spesifik": {
+        "sejakTanggal": "Tahun 2016",
+        "statusTempatTinggal": "Milik Sendiri"
+      },
+      "tglTerbit": "2026-07-29",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4880-KEMATIAN",
+      "noSurat": "474/008/DS-TS/VII/2026",
+      "nik": "3211040101450001",
+      "nama": "Hj. Ratna Sukarsih",
+      "tmpLahir": "Sumedang",
+      "tglLahir": "1945-01-01",
+      "jk": "Perempuan",
+      "agama": "Islam",
+      "pekerjaan": "Mengurus Rumah Tangga",
+      "alamat": "Dusun Cikuda RT 01 RW 03",
+      "kategori": "KEMATIAN",
+      "keperluan": "Pengurusan Klaim Asuransi Kematian & Taspen",
+      "spesifik": {
+        "namaAlmarhum": "Hj. Ratna Sukarsih",
+        "nikAlmarhum": "3211040101450001",
+        "tglMeninggal": "2026-07-27",
+        "tempatMeninggal": "Kediaman Duka Dusun Cikuda",
+        "sebabMeninggal": "Sakit Usia Lanjut"
+      },
+      "tglTerbit": "2026-07-28",
+      "petugas": "Admin Desa"
+    },
+    {
+      "id": "TRX-4874-SKU",
+      "noSurat": "470/007/DS-TS/VII/2026",
+      "nik": "3211042504880005",
+      "nama": "Cecep Mulyana",
+      "tmpLahir": "Sumedang",
+      "tglLahir": "1988-04-25",
+      "jk": "Laki-laki",
+      "agama": "Islam",
+      "pekerjaan": "Wiraswasta",
+      "alamat": "Dusun Sukamaju RT 02 RW 02",
+      "kategori": "SKU",
+      "keperluan": "Permohonan Izin Usaha Perdagangan & NIB",
+      "spesifik": {
+        "namaUsaha": "Bengkel Sepeda Motor Mulyana",
+        "jenisUsaha": "Jasa Servis & Penjualan Sparepart",
+        "lokasiUsaha": "Dusun Sukamaju RT 02 RW 02",
+        "tahunBerdiri": "2021"
+      },
+      "tglTerbit": "2026-07-25",
+      "petugas": "Admin Desa"
+    }
+  ],
+  "activities": [
+    {
+      "text": "Surat SKU Dicetak untuk Suparman",
+      "time": "2 menit lalu"
+    },
+    {
+      "text": "Permintaan Domisili oleh Dadang Hidayat",
+      "time": "15 menit lalu"
+    },
+    {
+      "text": "SKTM Disetujui untuk Budi Santoso",
+      "time": "1 jam lalu"
+    },
+    {
+      "text": "Surat Pengantar Nikah diterbitkan",
+      "time": "3 jam lalu"
+    },
+    {
+      "text": "Pencatatan Surat Kematian Hj. Ratna Sukarsih",
+      "time": "1 hari lalu"
+    }
+  ]
+}
