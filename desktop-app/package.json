@@ -1,0 +1,45 @@
+{
+  "name": "e-arsip-desa",
+  "productName": "E-Arsip Desa Tanjungsari",
+  "version": "1.0.0",
+  "description": "Sistem Pengarsipan Administrasi Desa Tanjungsari",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "author": "Pemerintah Desa Tanjungsari",
+  "license": "ISC",
+  "build": {
+    "appId": "com.tanjungsari.earsip",
+    "win": {
+      "target": "nsis",
+      "icon": "../frontend/assets/logo.png"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../frontend",
+        "to": "frontend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "electron": "^43.4.1",
+    "electron-builder": "^26.15.3",
+    "wait-on": "^9.1.0"
+  }
+}

@@ -63,6 +63,15 @@ app.use('/api/aktivitas',   verifyToken, aktivitasRoutes);
 app.use('/api/jenis-surat', verifyToken, jenisRoutes);
 app.use('/api/agenda',      verifyToken, agendaRoutes);
 
+// ── Static Frontend ───────────────────────────────────────────────────────────
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../../frontend')));
+
+// Jika akses root `/`, arahkan ke login.html atau index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/index.html'));
+});
+
 // ── Health Check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
   res.json({
